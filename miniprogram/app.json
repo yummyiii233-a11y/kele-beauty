@@ -1,0 +1,104 @@
+{
+  "pages": [
+    "pages/home/index",
+    "pages/services/index",
+    "pages/profile/index",
+    "pages/booking/index",
+    "pages/appointments/index",
+    "pages/card/index",
+    "pages/records/index",
+    "pages/lottery/index",
+    "pages/prizes/index",
+    "pages/login/index",
+    "pages/settings/index",
+    "pages/staff-home/index",
+    "pages/staff/index",
+    "pages/staff-orders/index",
+    "pages/staff/members/index",
+    "pages/staff/charge/index",
+    "pages/staff/recharge/index",
+    "pages/staff/prizes/index",
+    "pages/boss-home/index",
+    "pages/boss/payroll/index",
+    "pages/boss/finance/index"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTitleText": "可樂",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#FFFFFF",
+    "backgroundTextStyle": "dark"
+  },
+  "tabBar": {
+    "custom": true,
+    "color": "#9C8F8B",
+    "selectedColor": "#171717",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
+    "list": [
+      {
+        "pagePath": "pages/home/index",
+        "text": "首页",
+        "iconPath": "images/icons/ic_home_gray.png",
+        "selectedIconPath": "images/icons/ic_home.png"
+      },
+      {
+        "pagePath": "pages/services/index",
+        "text": "服务",
+        "iconPath": "images/icons/ic_scissors_gray.png",
+        "selectedIconPath": "images/icons/ic_scissors.png"
+      },
+      {
+        "pagePath": "pages/appointments/index",
+        "text": "预约",
+        "iconPath": "images/icons/ic_calendar_gray.png",
+        "selectedIconPath": "images/icons/ic_calendar.png"
+      },
+      {
+        "pagePath": "pages/lottery/index",
+        "text": "抽奖",
+        "iconPath": "images/icons/ic_gift_gray.png",
+        "selectedIconPath": "images/icons/ic_gift.png"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "我的",
+        "iconPath": "images/icons/ic_user_gray.png",
+        "selectedIconPath": "images/icons/ic_user.png"
+      },
+      {
+        "pagePath": "pages/staff-home/index",
+        "text": "工作台",
+        "iconPath": "images/icons/ic_briefcase_gray.png",
+        "selectedIconPath": "images/icons/ic_briefcase.png"
+      },
+      {
+        "pagePath": "pages/staff-orders/index",
+        "text": "抢单",
+        "iconPath": "images/icons/ic_ticket_gray.png",
+        "selectedIconPath": "images/icons/ic_ticket.png"
+      },
+      {
+        "pagePath": "pages/boss-home/index",
+        "text": "看板",
+        "iconPath": "images/icons/ic_chart_gray.png",
+        "selectedIconPath": "images/icons/ic_chart.png"
+      },
+      {
+        "pagePath": "pages/boss/payroll/index",
+        "text": "工资",
+        "iconPath": "images/icons/ic_coin_gray.png",
+        "selectedIconPath": "images/icons/ic_coin.png"
+      },
+      {
+        "pagePath": "pages/boss/finance/index",
+        "text": "记账",
+        "iconPath": "images/icons/ic_list_gray.png",
+        "selectedIconPath": "images/icons/ic_list.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
