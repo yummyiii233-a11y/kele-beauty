@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可樂 · 门店会员小程序界面预览</title>
+<style>
+  :root {
+    --brand: #171717; --brand-deep: #262626; --brand-soft: #F4F4F4; --brand-line: #DEDEDE;
+    --gold: #525252; --gold-soft: #F5F5F5;
+    --bg: #FFFFFF; --card: #FFFFFF;
+    --ink: #171717; --ink-2: #737373; --ink-3: #8A8A8A; --line: #EAEAEA;
+    --ok: #4CAF7D; --ok-soft: #E9F5EF; --warn: #E8834A; --warn-soft: #FDF0E6;
+    --bad: #E05A5A; --bad-soft: #FBEAEA;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+    background: #1C181A; color: #E8E0DC;
+    display: flex; min-height: 100vh; gap: 0;
+  }
+  /* ===== 侧栏 ===== */
+  aside {
+    width: 232px; flex-shrink: 0; padding: 28px 18px;
+    border-right: 1px solid #2E272A; overflow-y: auto; height: 100vh;
+    position: sticky; top: 0;
+  }
+  aside h1 { font-size: 17px; letter-spacing: 2px; color: #fff; }
+  aside .sub { font-size: 12px; color: #8D8184; margin: 6px 0 22px; }
+  aside .group { font-size: 11px; color: #7A6E71; letter-spacing: 2px; margin: 18px 0 8px; }
+  aside button {
+    display: block; width: 100%; text-align: left;
+    background: none; border: none; color: #C9BDB9;
+    font-size: 13px; padding: 8px 12px; border-radius: 8px; cursor: pointer;
+  }
+  aside button:hover { background: #2A2426; color: #fff; }
+  aside button.active { background: var(--brand); color: #fff; font-weight: 600; }
+  /* ===== 主区 ===== */
+  main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+  .stage { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+  .screen-title { font-size: 14px; color: #9A8D90; letter-spacing: 1px; }
+  /* 手机框 */
+  .phone {
+    width: 390px; height: 812px; border-radius: 46px;
+    border: 10px solid #000; background: var(--bg);
+    box-shadow: 0 30px 80px rgba(0,0,0,.55), 0 0 0 1px #3A3235;
+    overflow: hidden; position: relative;
+  }
+  .statusbar {
+    height: 44px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 26px; font-size: 13px; font-weight: 600; color: var(--ink);
+    background: var(--bg);
+  }
+  .screen-body { height: 724px; overflow-y: auto; scrollbar-width: none; }
+  .screen-body::-webkit-scrollbar { display: none; }
+  /* ===== 小程序内样式（与 app.wxss 同源） ===== */
+  .screen-body { font-size: 14px; line-height: 1.55; color: var(--ink); }
+  .page { padding: 12px 16px 32px; }
+  .card { background: var(--card); border-radius: 12px; padding: 14px; box-shadow: 0 3px 12px rgba(122,80,80,.05); }
+  .card + .card { margin-top: 12px; }
+  .section { margin-top: 16px; }
+  .section-title { display: flex; justify-content: space-between; align-items: center; margin: 0 2px 10px; font-size: 16px; font-weight: 600; }
+  .section-title .more { font-size: 12px; font-weight: 400; color: var(--ink-3); }
+  .row { display: flex; align-items: center; }
+  .row-between { display: flex; align-items: center; justify-content: space-between; }
+  .col { display: flex; flex-direction: column; }
+  .flex-1 { flex: 1; min-width: 0; }
+  .ellipsis { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .t-title { font-size: 16px; font-weight: 600; }
+  .t-sub { font-size: 12px; color: var(--ink-2); }
+  .t-tip { font-size: 11px; color: var(--ink-3); }
+  .t-brand { color: var(--brand); } .t-gold { color: var(--gold); }
+  .t-ok { color: var(--ok); } .t-bad { color: var(--bad); }
+  .t-num { font-family: "DIN Alternate", -apple-system, sans-serif; font-weight: 600; }
+  .price { color: var(--brand); font-weight: 600; }
+  .price .unit { font-size: 11px; font-weight: 400; }
+  .ic { width: 20px; height: 20px; flex-shrink: 0; }
+  .ic-sm { width: 16px; height: 16px; flex-shrink: 0; }
+  .ic-lg { width: 26px; height: 26px; flex-shrink: 0; }
+  .ic-badge { width: 36px; height: 36px; border-radius: 11px; background: var(--brand-soft); display: flex; align-items: center; justify-content: center; color: var(--brand); flex-shrink: 0; }
+  .ic-badge.gold { background: var(--gold-soft); color: var(--gold); }
+  .ic-badge.sm { width: 30px; height: 30px; border-radius: 9px; }
+  .btn { display: flex; align-items: center; justify-content: center; height: 44px; border-radius: 22px; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-primary { background: var(--brand); color: #fff; box-shadow: 0 5px 12px rgba(183,110,121,.32); }
+  .btn-ghost { background: #fff; color: var(--brand); border: 1px solid var(--brand-line); }
+  .btn-soft { background: var(--brand-soft); color: var(--brand-deep); }
+  .btn-block { width: 100%; }
+  .btn-mini { display: inline-flex; align-items: center; height: 28px; padding: 0 13px; border-radius: 15px; font-size: 12px; background: var(--brand-soft); color: var(--brand-deep); }
+  .btn-mini.primary { background: var(--brand); color: #fff; }
+  .btn-mini.line { background: #fff; border: 1px solid var(--line); color: var(--ink-2); }
+  .cell { display: flex; align-items: center; padding: 14px 2px; border-bottom: 1px solid var(--line); }
+  .cell:last-child { border-bottom: none; }
+  .cell-title { flex: 1; font-size: 15px; margin-left: 12px; }
+  .cell-desc { font-size: 12px; color: var(--ink-3); margin-top: 2px; }
+  .cell-arrow { width: 16px; height: 16px; opacity: .45; }
+  .tag { display: inline-flex; align-items: center; height: 20px; padding: 0 8px; border-radius: 5px; font-size: 10px; font-weight: 500; background: var(--brand-soft); color: var(--brand-deep); flex-shrink: 0; }
+  .tag.gold { background: var(--gold-soft); color: #525252; }
+  .tag.ok { background: var(--ok-soft); color: #34885D; }
+  .tag.warn { background: var(--warn-soft); color: #C06428; }
+  .tag.bad { background: var(--bad-soft); color: #C24B4B; }
+  .tag.gray { background: #F3F3F3; color: var(--ink-2); }
+  .tabs { display: flex; gap: 8px; }
+  .tab { height: 32px; padding: 0 14px; border-radius: 16px; display: flex; align-items: center; font-size: 13px; background: #fff; color: var(--ink-2); border: 1px solid var(--line); cursor: pointer; }
+  .tab.active { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600; }
+  .form-item { display: flex; align-items: center; min-height: 50px; border-bottom: 1px solid var(--line); font-size: 14px; }
+  .form-item:last-child { border-bottom: none; }
+  .form-label { width: 90px; color: var(--ink-2); flex-shrink: 0; }
+  .form-value { flex: 1; }
+  .form-placeholder { color: var(--ink-3); }
+  .divider { height: 1px; background: var(--line); margin: 12px 0; }
+  .empty { padding: 40px 0; display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--ink-3); font-size: 13px; }
+  .empty .ic { width: 44px; height: 44px; opacity: .35; }
+  /* 参考图 */
+  .pics-row { display: flex; gap: 8px; margin-top: 10px; }
+  .pic-box { width: 76px; height: 76px; border-radius: 8px; background: var(--brand-soft); }
+  .pic-ph { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--brand); }
+  .pic-add {
+    width: 76px; height: 76px; border-radius: 8px; background: #F8F4F1;
+    border: 1px dashed #D9CCC7; box-sizing: border-box;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    color: var(--ink-3);
+  }
+  .pic-add .pic-add-ic { width: 20px; height: 20px; }
+  .pic-add-txt { font-size: 11px; color: var(--ink-3); }
+  /* tabBar */
+  .tabbar { display: flex; justify-content: center; padding: 0 14px 16px; background: transparent; }
+  .dockbar {
+    max-width: 100%;
+    display: flex; align-items: center; gap: 4px; padding: 6px 9px; border-radius: 22px;
+    background: rgba(255,255,255,.88); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,.8);
+    box-shadow: 0 8px 20px rgba(44,37,40,.14), 0 1px 4px rgba(44,37,40,.06);
+    animation: dockFloat 4s ease-in-out infinite;
+  }
+  @keyframes dockFloat { 0%,100% { transform: translateY(-2px) } 50% { transform: translateY(2px) } }
+  .tabbar-item { position: relative; display: flex; align-items: center; padding: 7px 13px; border-radius: 18px; cursor: pointer; transition: transform .28s cubic-bezier(.34,1.56,.64,1), background-color .28s ease; }
+  .tabbar-item:hover { transform: scale(1.1) translateY(-2px); }
+  .tabbar-item:active { transform: scale(.95); }
+  .tabbar-item.active { background: var(--brand-soft); transform: scale(1.06); }
+  .tabbar-item .lb { font-size: 11px; font-weight: 600; color: var(--brand); white-space: nowrap; overflow: hidden; max-width: 0; opacity: 0; transition: max-width .28s ease, opacity .22s ease, margin-left .28s ease; }
+  .tabbar-item.active .lb { max-width: 60px; opacity: 1; margin-left: 6px; }
+  .tabbar-item .tip {
+    position: absolute; bottom: calc(100% + 8px); left: 50%;
+    transform: translateX(-50%) translateY(6px) scale(.9); transform-origin: bottom center; opacity: 0;
+    padding: 4px 10px; border-radius: 10px; font-size: 10px; color: #fff; background: rgba(44,37,40,.88);
+    white-space: nowrap; pointer-events: none;
+    transition: opacity .22s ease, transform .28s cubic-bezier(.34,1.56,.64,1);
+  }
+  .tabbar-item:hover .tip { opacity: 1; transform: translateX(-50%) translateY(0) scale(1); }
+  .tabbar-item .tip::after { content: ''; position: absolute; top: 100%; left: 50%; margin-left: -4px; border: 4px solid transparent; border-top-color: rgba(44,37,40,.88); }
+  /* 首页 */
+  .hero { border-radius: 14px; padding: 20px 18px; background: linear-gradient(135deg,#333333 0%,#171717 55%,#262626 100%); color: #fff; box-shadow: 0 7px 16px rgba(0,0,0,.28); position: relative; overflow: hidden; }
+  .hero-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+  .hero-mask { position: absolute; left: 0; top: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.2) 60%, rgba(0,0,0,.45) 100%); }
+  .hero > *:not(.hero-bg):not(.hero-mask) { position: relative; }
+  .hero::after { content: ''; position: absolute; right: -30px; top: -30px; width: 120px; height: 120px; border-radius: 50%; background: rgba(255,255,255,.08); }
+  .hero-name { font-size: 26px; font-weight: 700; letter-spacing: 4px; }
+  .hero-slogan { font-size: 12px; opacity: .85; margin-top: 4px; }
+  .hero-logo { width: 54px; height: 54px; border-radius: 16px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; font-size: 26px; font-weight: 700; }
+  .hero-meta { margin-top: 14px; display: flex; flex-wrap: wrap; }
+  .hero-meta-item { font-size: 11px; opacity: .92; background: rgba(255,255,255,.14); border-radius: 12px; padding: 4px 10px; margin: 0 6px 5px 0; display: flex; align-items: center; gap: 4px; }
+  .hero-actions { margin-top: 16px; gap: 10px; }
+  .hero-btn { flex: 1; height: 38px; border-radius: 19px; background: #fff; color: var(--brand-deep); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 600; cursor: pointer; }
+  .hero-btn.ghost { background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.5); color: #fff; }
+  .lottery-tip { margin-top: 12px; height: 44px; border-radius: 22px; background: linear-gradient(90deg,#525252,#333333); color: #fff; font-size: 13px; font-weight: 500; padding: 0 16px; display: flex; align-items: center; gap: 8px; box-shadow: 0 5px 12px rgba(185,139,69,.35); cursor: pointer; }
+  .quick { margin-top: 12px; display: flex; flex-wrap: wrap; padding: 16px 6px 8px; }
+  .quick-item { width: 25%; display: flex; flex-direction: column; align-items: center; font-size: 11px; color: var(--ink-2); margin-bottom: 14px; gap: 6px; cursor: pointer; }
+  .svc-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+  .svc-item { width: calc(50% - 5px); padding: 0 0 10px; overflow: hidden; cursor: pointer; }
+  .svc-cover { width: 100%; height: 96px; background: linear-gradient(135deg,#F4F4F4,#EAEAEA); display: flex; align-items: center; justify-content: center; color: var(--brand); overflow: hidden; }
+  /* 图片占位（真实图到位后替换） */
+  .img-ph { position: relative; width: 100%; height: 100%; background: linear-gradient(150deg, #F3E4E6 0%, #EBD4D7 55%, #E2C4C8 100%); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .img-ph span { font-family: Georgia, serif; font-size: 22px; letter-spacing: 4px; color: rgba(0,0,0,.22); font-weight: 700; }
+  .img-ph.full { position: absolute; left: 0; top: 0; }
+  .img-ph.full span { font-size: 15px; }
+  .hero .img-ph { background: linear-gradient(160deg, #333333 0%, #262626 68%, #7E4450 100%); }
+  .hero .img-ph span { color: rgba(255,255,255,.12); font-size: 15px; }
+  .svc-cover img { width: 100%; height: 100%; object-fit: cover; }
+  .svc-name { font-size: 14px; font-weight: 600; padding: 9px 10px 4px; }
+  .pool-tip { font-size: 12px; color: var(--ink-2); background: var(--gold-soft); border-radius: 8px; padding: 8px 10px; margin-bottom: 4px; }
+  .pool-item { padding: 11px 0; border-bottom: 1px solid var(--line); }
+  .pool-item:last-child { border-bottom: none; }
+  .pool-name { font-size: 14px; margin-right: 8px; }
+  /* 服务 */
+  .svc-row { display: flex; padding: 12px; cursor: pointer; }
+  .svc-img { width: 90px; height: 90px; border-radius: 10px; background: linear-gradient(135deg,#F4F4F4,#EAEAEA); display: flex; align-items: center; justify-content: center; color: var(--brand); flex-shrink: 0; overflow: hidden; }
+  .svc-img img { width: 100%; height: 100%; object-fit: cover; }
+  .svc-info { margin-left: 12px; display: flex; flex-direction: column; justify-content: space-between; }
+  .svc-meta { gap: 6px; }
+  /* 预约 */
+  .days { display: flex; gap: 8px; overflow: hidden; }
+  .day { width: 66px; padding: 9px 0; border-radius: 10px; background: #F8F4F1; color: var(--ink-2); display: flex; flex-direction: column; align-items: center; font-size: 13px; cursor: pointer; }
+  .day.active { background: var(--brand); color: #fff; }
+  .day .week { font-size: 10px; opacity: .8; margin-top: 2px; }
+  .slots { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+  .slot { width: calc((100% - 24px)/4); height: 38px; border-radius: 9px; display: flex; align-items: center; justify-content: center; background: #F8F4F1; font-size: 13px; cursor: pointer; }
+  .slot.active { background: var(--brand-soft); border: 1px solid var(--brand); color: var(--brand-deep); font-weight: 600; }
+  .slot.disabled { background: #F3F3F3; color: var(--ink-3); text-decoration: line-through; cursor: not-allowed; }
+  .picked { background: var(--brand-soft); border-radius: 10px; padding: 12px; }
+  /* 会员卡 */
+  .mcard { border-radius: 14px; padding: 20px 18px; background: linear-gradient(135deg,#333333 0%,#171717 55%,#262626 100%); color: #fff; box-shadow: 0 7px 16px rgba(0,0,0,.28); position: relative; overflow: hidden; }
+  .mcard-bg { position: absolute; left: 0; top: 0; width: 100%; height: 100%; object-fit: cover; }
+  .mcard > *:not(.mcard-bg) { position: relative; }
+  .mcard-label { font-size: 11px; opacity: .8; }
+  .mcard-balance { font-size: 38px; font-weight: 700; line-height: 1.2; }
+  .mcard-balance .unit { font-size: 15px; }
+  .mcard-chip { width: 44px; height: 44px; border-radius: 13px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; }
+  .mcard-foot { margin-top: 18px; font-size: 12px; opacity: .92; }
+  .progress-wrap { display: flex; align-items: center; gap: 10px; margin: 10px 0 6px; }
+  .progress { flex: 1; height: 6px; border-radius: 3px; background: #F1E7E5; overflow: hidden; }
+  .progress-in { height: 100%; border-radius: 3px; background: linear-gradient(90deg,#333333,#171717); }
+  /* 记录 */
+  .rec { display: flex; align-items: flex-start; }
+  .rec + .rec { margin-top: 10px; }
+  .rec-info { margin: 0 10px; }
+  .rec-amount { font-size: 15px; }
+  /* 抽奖 */
+  .lottery-hero { text-align: center; padding-top: 12px; }
+  .lottery-title { font-size: 22px; font-weight: 700; }
+  .lottery-sub { font-size: 12px; color: var(--ink-2); margin-top: 6px; padding: 0 30px; }
+  .cards { display: flex; justify-content: center; gap: 24px; margin-top: 30px; }
+  .flip { width: 130px; height: 180px; perspective: 800px; cursor: pointer; }
+  .flip-inner { position: relative; width: 100%; height: 100%; transform-style: preserve-3d; transition: transform .7s cubic-bezier(.4,.1,.2,1); }
+  .flip.open .flip-inner { transform: rotateY(180deg); }
+  .face { position: absolute; left: 0; top: 0; width: 100%; height: 100%; border-radius: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; backface-visibility: hidden; box-shadow: 0 8px 16px rgba(122,80,80,.18); }
+  .face.back { background: linear-gradient(150deg,#D08E98 0%,#171717 60%,#A05A66 100%); color: #fff; }
+  .face-logo { width: 60px; height: 60px; border-radius: 18px; background: rgba(255,255,255,.16); border: 1px solid rgba(255,255,255,.4); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; }
+  .face-tip { font-size: 11px; opacity: .85; margin-top: 10px; }
+  .face.front { transform: rotateY(180deg); color: #fff; }
+  .face.front.win { background: linear-gradient(150deg,#D4AF7A,#525252); }
+  .face.front.miss { background: linear-gradient(150deg,#B8B2B0,#8F8886); }
+  .face-name { font-size: 14px; font-weight: 600; margin-top: 10px; padding: 0 10px; text-align: center; }
+  /* 奖品 */
+  .prize { display: flex; align-items: flex-start; }
+  .prize + .prize { margin-top: 10px; }
+  .prize-info { margin-left: 10px; }
+  .prize-foot { margin-top: 6px; }
+  /* 个人 */
+  .avatar { width: 54px; height: 54px; border-radius: 50%; background: var(--brand-soft); display: flex; align-items: center; justify-content: center; color: var(--brand); flex-shrink: 0; }
+  .user-balance { text-align: center; padding: 6px 12px; background: var(--brand-soft); border-radius: 10px; cursor: pointer; }
+  .user-balance-num { color: var(--brand-deep); font-weight: 700; font-size: 16px; }
+  .user-balance-label { font-size: 10px; color: var(--ink-3); }
+  .role-tag { margin-left: 6px; }
+  .tag.preview-tag { background: rgba(183,110,121,.12); color: #262626; margin-left: 6px; }
+  /* ===== 设置页：身份切换 ===== */
+  .role-opt { display: flex; align-items: center; padding: 12px 6px; border-radius: 12px; cursor: default; }
+  .role-opt + .role-opt { margin-top: 2px; }
+  .role-opt.cur { background: #FDF7F4; }
+  .role-opt .role-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+  .role-opt .role-desc { font-size: 11px; color: var(--ink-3); margin-top: 2px; }
+  .role-opt .tag { margin-right: 6px; }
+  .role-opt.disabled { opacity: .42; }
+  .set-danger { color: var(--bad); }
+  .set-note { text-align: center; font-size: 11px; color: var(--ink-3); padding: 14px 40px 4px; line-height: 1.7; }
+  /* 店员 */
+  .stats { display: flex; }
+  .stat { flex: 1; text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; color: var(--brand-deep); }
+  .stat-label { font-size: 11px; color: var(--ink-3); margin-top: 3px; }
+  .mem { display: flex; align-items: center; }
+  .mem + .mem { margin-top: 10px; }
+  .mem-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--brand-soft); display: flex; align-items: center; justify-content: center; color: var(--brand); flex-shrink: 0; }
+  .mem-info { margin: 0 10px; }
+  .mp-search { display: flex; align-items: center; background: #F8F4F1; border-radius: 20px; height: 40px; padding: 0 14px; gap: 7px; color: var(--ink-3); }
+  .mp-selected { background: var(--brand-soft); border-radius: 10px; padding: 12px; }
+  .switch { width: 44px; height: 26px; border-radius: 13px; background: #E8DCD8; position: relative; flex-shrink: 0; cursor: pointer; }
+  .switch::after { content: ''; position: absolute; width: 22px; height: 22px; border-radius: 50%; background: #fff; top: 2px; left: 2px; transition: left .2s; box-shadow: 0 1px 3px rgba(0,0,0,.15); }
+  .switch.on { background: var(--brand); }
+  .switch.on::after { left: 20px; }
+
+/* Reference-led monochrome refresh */
+body { background:#ededed; color:#171717; }
+aside { background:#fff; border-color:#ddd; }
+aside .sub, aside .group { color:#777; }
+aside h1 { color:#111; }
+aside button { color:#555; min-height:36px; }
+aside button:hover { background:#f2f2f2; color:#111; }
+.screen-title { color:#666; }
+.phone { box-shadow:0 24px 70px #0002; }
+.card { border:1px solid #eaeaea; border-radius:14px; box-shadow:none; }
+.section { margin-top:22px; }
+.section-title { letter-spacing:1px; font-size:17px; }
+.hero { background:#151515; border-radius:20px; padding:24px 18px; box-shadow:none; }
+.hero .img-ph { background:#151515; }
+.hero-name { font-family:'Songti SC',serif; font-size:32px; font-weight:500; }
+.hero-logo { border-radius:50%; background:transparent; }
+.hero-actions { margin-top:20px; }
+.hero-btn { min-height:44px; }
+.quick.card { border:0; padding-top:20px; }
+.ic-badge { border-radius:50%; background:#fff; border:1px solid #dedede; }
+.ic-badge.gold { background:#fff; }
+.svc-cover { height:120px; }
+.svc-item { border-radius:10px; }
+.svc-cover img,.svc-img img { width:100%; height:100%; object-fit:cover; }
+.dockbar { width:100%; justify-content:space-around; background:#090909; border-color:#090909; border-radius:40px; animation:none; }
+.tabbar-item { padding:12px; min-width:44px; min-height:44px; justify-content:center; }
+.tabbar-item svg { color:white!important; }
+.tabbar-item.active { background:white; transform:none; }
+.tabbar-item.active svg { color:#111!important; }
+.tabbar-item.active .lb { max-width:0; margin:0; opacity:0; }
+.btn-primary { box-shadow:none; }
+@media(max-width:650px) { aside { width:130px; padding:20px 8px; } main { padding:16px 4px; min-width:0; } .phone { width:min(390px,calc(100vw - 146px)); border-width:4px; border-radius:28px; } }
+
+@media(max-width:650px) {
+ body { display:block; }
+ aside { width:100%; height:auto; position:static; padding:12px; display:flex; gap:6px; overflow-x:auto; align-items:center; border-bottom:1px solid #ddd; }
+ aside h1 { flex-shrink:0; margin-right:8px; } aside .sub,aside .group { display:none; }
+ aside button { width:auto; flex-shrink:0; white-space:nowrap; }
+ main { padding:16px 8px; }
+ .phone { width:min(390px,calc(100vw - 24px)); border-width:6px; border-radius:36px; }
+}
+.lottery-tip { box-shadow:none; background:#333; }
+
+.hero-actions { display:flex; }
+.hero .img-ph span { display:none; }
+.tabbar { position:absolute; bottom:0; left:0; right:0; z-index:10; }
+.screen-body { height:calc(100% - 44px); padding-bottom:88px; }
+@media(max-width:650px) { .phone { height:calc(100dvh - 100px); min-height:550px; } }
+@media(max-width:650px){aside{height:60px;box-sizing:border-box;overflow-y:hidden;}aside>div{display:contents;}main{padding-top:12px;}.phone{height:calc(100dvh - 120px);min-height:500px;}}
+</style>
+</head>
+<body>
+  <aside>
+    <h1>可樂</h1>
+    <div class="sub">门店会员小程序 · 界面预览</div>
+    <div class="group">顾客端</div>
+    <div id="nav-customer"></div>
+    <div class="group">店员端</div>
+    <div id="nav-staff"></div>
+    <div class="group">老板端</div>
+    <div id="nav-boss"></div>
+  </aside>
+  <main>
+    <div class="stage">
+      <div class="screen-title" id="screenTitle"></div>
+      <div class="phone">
+        <div class="statusbar"><span>9:41</span><span>可樂</span></div>
+        <div class="screen-body" id="screen"></div>
+        <div class="tabbar" id="tabbar"></div>
+      </div>
+    </div>
+  </main>
+
+<script>
+/* ================= 图标（线性，与小程序内一致风格） ================= */
+const P = {
+  home: '<path d="M4 11 L12 4 L20 11"/><path d="M6.5 10 V19 H17.5 V10"/>',
+  scissors: '<circle cx="7" cy="17.2" r="2.3"/><circle cx="17" cy="17.2" r="2.3"/><path d="M8.7 15.4 L19 4.5"/><path d="M15.3 15.4 L5 4.5"/>',
+  calendar: '<rect x="4" y="6" width="16" height="14" rx="2"/><path d="M4 10 H20 M8 4 V8 M16 4 V8"/><circle cx="8.5" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="12" cy="14" r=".9" fill="currentColor" stroke="none"/><circle cx="15.5" cy="14" r=".9" fill="currentColor" stroke="none"/>',
+  user: '<circle cx="12" cy="8" r="3.4"/><path d="M5 19.5 c0-3.6 3-5.6 7-5.6 s7 2 7 5.6"/>',
+  users: '<circle cx="9" cy="9" r="3"/><path d="M3.5 19.5 c0-3 2.4-4.8 5.5-4.8 s5.5 1.8 5.5 4.8"/><circle cx="17.2" cy="10" r="2.2"/><path d="M15.5 15.2 c2.8 0 5 1.5 5 4.3"/>',
+  gift: '<rect x="4" y="10" width="16" height="10" rx="1.5"/><path d="M4 13.5 H20 M12 10 V20"/><path d="M12 6.8 C10.3 4.2 6.6 4.6 7.1 7.1 c.3 1.6 2.6 2.6 4.9 2.9 M12 6.8 c1.7-2.6 5.4-2.2 4.9.3 -.3 1.6-2.6 2.6-4.9 2.9"/>',
+  card: '<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10.5 H21"/><rect x="6" y="13.5" width="4.5" height="3" rx=".8"/>',
+  coin: '<circle cx="12" cy="12" r="8"/><path d="M12 7.8 V16.2 M9 10.5 H15 M9 13.5 H15"/>',
+  clock: '<circle cx="12" cy="12" r="8"/><path d="M12 8 V12 L15 13.5"/>',
+  plus: '<path d="M12 5 V19 M5 12 H19"/>',
+  search: '<circle cx="11" cy="11" r="6"/><path d="M15.5 15.5 L20 20"/>',
+  chevron: '<path d="M9.5 5.5 L16 12 L9.5 18.5"/>',
+  camera: '<path d="M4 8.5 H8 L9.6 6 H14.4 L16 8.5 H20 V18.5 H4 Z"/><circle cx="12" cy="13.2" r="3.2"/>',
+  ticket: '<rect x="3" y="7" width="18" height="10" rx="2"/><path d="M14.5 9.5 V14.5"/>',
+  phone: '<rect x="8" y="3" width="8" height="18" rx="2.5"/><path d="M11 18 h2"/>',
+  crown: '<path d="M5 17 L5 8 L9 12 L12 6.5 L15 12 L19 8 L19 17 Z"/><path d="M5 17 H19"/>',
+  list: '<path d="M8.5 6 H20 M8.5 12 H20 M8.5 18 H20"/><circle cx="4.5" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4.5" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4.5" cy="18" r="1" fill="currentColor" stroke="none"/>',
+  location: '<path d="M12 21 C8 16.5 6 13.8 6 11 a6 6 0 1 1 12 0 c0 2.8 -2 5.5 -6 10 Z"/><circle cx="12" cy="11" r="2.2"/>',
+  heart: '<path d="M12 20 C6.5 15.5 4 12.5 4 9.5 A4.3 4.3 0 0 1 12 7.5 A4.3 4.3 0 0 1 20 9.5 C20 12.5 17.5 15.5 12 20 Z"/>',
+  sparkle: '<path d="M12 3 L14 10 L21 12 L14 14 L12 21 L10 14 L3 12 L10 10 Z"/>',
+  edit: '<path d="M14.5 5.5 l4 4 L8 20 H4 v-4 Z"/><path d="M4 20 h16" opacity=".4"/>',
+  close: '<path d="M6.5 6.5 L17.5 17.5 M17.5 6.5 L6.5 17.5"/>',
+  check: '<path d="M5 12.5 L10 17.5 L19 7.5"/>',
+  settings: '<path d="M4 7 H20 M4 12 H20 M4 17 H20"/><circle cx="9" cy="7" r="1.9" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.9" fill="currentColor" stroke="none"/><circle cx="8" cy="17" r="1.9" fill="currentColor" stroke="none"/>',
+  bell: '<path d="M6.5 16 V11 a5.5 5.5 0 0 1 11 0 v5"/><path d="M4 16 h16 M10.2 19 a1.8 1.8 0 0 0 3.6 0"/>',
+  chart: '<path d="M5 20 V14 M12 20 V9 M19 20 V5 M3.5 20 h17"/>',
+  bag: '<path d="M6.5 8 H17.5 L18.8 20 H5.2 Z"/><path d="M9 8 V6.2 a3 3 0 0 1 6 0 V8"/>',
+  wallet: '<path d="M3.5 8.5 V7 a2 2 0 0 1 2-2 H17 a2 2 0 0 1 2 2 v1.5"/><rect x="3.5" y="8.5" width="17" height="10.5" rx="2"/><circle cx="16.5" cy="13.8" r="1.1" fill="currentColor" stroke="none"/>',
+  star: '<path d="M12 4.2 L14.5 9.7 L20.4 10.4 L16 14.5 L17.2 20.3 L12 17.3 L6.8 20.3 L8 14.5 L3.6 10.4 L9.5 9.7 Z"/>',
+  scan: '<path d="M4 8.5 V6 a2 2 0 0 1 2-2 H8.5 M15.5 4 H18 a2 2 0 0 1 2 2 v2.5 M20 15.5 V18 a2 2 0 0 1 -2 2 H15.5 M8.5 20 H6 a2 2 0 0 1 -2-2 V15.5"/><path d="M4 12 H20"/>',
+  minus: '<path d="M5.5 12 H18.5"/>',
+  chevron_left: '<path d="M14.5 5.5 L8 12 L14.5 18.5"/>',
+  briefcase: '<rect x="3.5" y="8" width="17" height="12" rx="2"/><path d="M9 8 V6.5 A1.5 1.5 0 0 1 10.5 5 h3 A1.5 1.5 0 0 1 15 6.5 V8"/><path d="M3.5 13 H21 M12 11.5 V14.5"/>',
+  logout: '<path d="M9 21 H5.5 A1.5 1.5 0 0 1 4 19.5 V4.5 A1.5 1.5 0 0 1 5.5 3 H9"/><path d="M15 16.5 L19.5 12 L15 7.5"/><path d="M19.5 12 H9"/>',
+  refresh: '<path d="M20 5.5 V10 H15.5"/><path d="M4 18.5 V14 H8.5"/><path d="M19.6 10 A8 8 0 0 0 6.2 6.9 L4 9"/><path d="M4.4 14 A8 8 0 0 0 17.8 17.1 L20 15"/>'
+}
+function ic(name, cls) {
+  return '<svg class="' + (cls || 'ic') + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">' + (P[name] || '') + '</svg>'
+}
+
+/* ================= 通用片段 ================= */
+const ART = { '美甲': 'images/services/svc_nail.jpg', '美睫': 'images/services/svc_lash.jpg', '美容': 'images/services/svc_skin.jpg' }
+// 图片后期替换：当前用柔和占位块（含类别字水印），放入真实图片路径即可
+const art = cat => '<img alt="'+cat+'服务展示" src="../miniprogram/images/services/'+(cat.includes('甲')?'svc_nail.jpg':cat.includes('睫')?'svc_lash.jpg':'svc_skin.jpg')+'">'
+
+const hero = `
+<div class="hero">
+  <div class="hero-bg img-ph full"><span>STORE</span></div>
+  <div class="hero-mask"></div>
+  <div class="row-between"><div><div class="hero-name">可樂</div><div class="hero-slogan">美甲 · 美睫 · 美容，慢下来，变漂亮</div></div><div class="hero-logo">可</div></div>
+  <div class="hero-meta">
+    <span class="hero-meta-item">${ic('location','ic-sm')} 12:30 - 22:00 · 欢迎到店</span>
+    <span class="hero-meta-item">${ic('phone','ic-sm')} 0755-0000-0000</span>
+  </div>
+  <div class="hero-actions"><div class="hero-btn">立即预约</div><div class="hero-btn ghost">我的会员卡</div></div>
+</div>`
+
+const services = [
+  { name: '经典纯色美甲', cat: '美甲', price: '88', min: 60, desc: '纯色打底，显白百搭', hot: 1 },
+  { name: '渐变猫眼美甲', cat: '美甲', price: '128', min: 75, desc: '猫眼磁力渐变，光泽细腻', hot: 1 },
+  { name: '自然舒适嫁接', cat: '美睫', price: '98', min: 70, desc: '根根分明，自然有神' },
+  { name: '补水焕肤管理', cat: '美容', price: '198', min: 75, desc: '深层补水，焕亮肤色' }
+]
+
+const pool = [
+  { name: '美甲优惠 30 元', type: '优惠券', remark: '任意美甲项目可用' },
+  { name: '免费手部护理 1 次', type: '免费项目', remark: '到店核销，提前预约' },
+  { name: '美睫补做加赠 10 天', type: '专属福利', remark: '补做有效期延长 10 天' }
+]
+
+const records = [
+  { name: '渐变猫眼美甲', sub: '10-14 16:30 · 小美 · 储值', amt: '-¥128', cls: 't-bad' },
+  { name: '自然舒适嫁接', sub: '10-12 14:00 · 店长 · 次卡', amt: '-1次', cls: 't-bad' },
+  { name: '充值 1000 赠 100', sub: '10-10 11:20 · 小美 · 微信', amt: '+¥1100', cls: 't-ok' },
+  { name: '深层清洁护理', sub: '10-06 15:00 · 阿玲 · 现金', amt: '-¥158', cls: 't-bad' }
+]
+
+const prizes = [
+  { name: '美甲优惠 30 元', type: '优惠券 · 面额 ¥30', status: '未使用', cls: 'ok', foot: '抽取于 10-12 11:21 · 有效期至 11-11' },
+  { name: '免费手部护理 1 次', type: '免费项目', status: '未使用', cls: 'ok', foot: '抽取于 10-02 16:40 · 有效期至 11-01' },
+  { name: '下次消费立减 20 元', type: '优惠券 · 面额 ¥20', status: '已核销', cls: 'gray', foot: '抽取于 09-28 13:05 · 已于 10-08 核销' }
+]
+
+/* ===== 身份（预览可切换） ===== */
+const REAL_ROLE = 'manager'          // 这个账号的真实身份：店长
+let ROLE = 'customer'                 // 当前预览的画面身份
+let CURRENT = 'home'
+const ROLE_LABEL = { customer: '顾客', staff: '店员', manager: '店长' }
+const ROLE_NAME = { customer: '顾客画面', staff: '员工画面', manager: '老板画面' }
+const ROLE_RANK = { customer: 0, staff: 1, manager: 2 }
+const ROLE_DOCK = {
+  customer: {
+    pages: ['home', 'services', 'appointments', 'lottery', 'profile'],
+    items: [['home', '首页'], ['scissors', '服务'], ['calendar', '预约'], ['gift', '抽奖'], ['user', '我的']]
+  },
+  staff: {
+    pages: ['staff-home', 'staff-orders', 'profile'],
+    items: [['briefcase', '工作台'], ['ticket', '抢单'], ['user', '我的']]
+  },
+  manager: {
+    pages: ['boss-home', 'boss-payroll', 'boss-finance', 'profile'],
+    items: [['chart', '看板'], ['coin', '工资'], ['list', '记账'], ['user', '我的']]
+  }
+}
+const ROLE_HOME = { customer: 'home', staff: 'staff-home', manager: 'boss-home' }
+
+// 支持 ?role=customer 直接以某个身份打开（便于分享具体画面）
+try {
+  const qr = new URLSearchParams(location.search).get('role')
+  if (qr && ROLE_RANK[qr] !== undefined && ROLE_RANK[qr] <= ROLE_RANK[REAL_ROLE]) ROLE = qr
+} catch (e) { /* ignore */ }
+
+function tabbar(activeIcon) {
+  const conf = ROLE_DOCK[ROLE]
+  const inner = conf.items.map((it, i) =>
+    '<div class="tabbar-item ' + (it[0] === activeIcon ? 'active' : '') + '" onclick="show(\'' + conf.pages[i] + '\')">' +
+      '<span class="tip">' + it[1] + '</span>' +
+      ic(it[0], 'ic') +
+      '<span class="lb">' + it[1] + '</span>' +
+    '</div>'
+  ).join('')
+  return '<div class="dockbar">' + inner + '</div>'
+}
+
+function statusBarless() { return '' }
+
+/* ================= 各页面 ================= */
+const S = {}
+
+S['home'] = () => `
+<div class="page">
+  ${hero}
+  <div class="lottery-tip">${ic('gift','ic-sm')}<span class="flex-1">您有一张翻牌抽奖卡待开启</span>${ic('chevron','ic-sm')}</div>
+  <div class="quick card">
+    ${[['calendar','预约到店',''],['card','会员卡',''],['gift','翻牌抽奖','gold'],['ticket','我的奖品','gold'],['clock','消费记录',''],['coin','充值记录',''],['list','我的预约',''],['bell','店员工作台','gold']]
+      .map(q => '<div class="quick-item"><div class="ic-badge ' + q[2] + '">' + ic(q[0]) + '</div><span>' + q[1] + '</span></div>').join('')}
+  </div>
+  <div class="section">
+    <div class="section-title"><span>服务项目</span><span class="more">全部 ›</span></div>
+    <div class="svc-grid">
+      ${services.slice(0,4).map(s =>
+        '<div class="svc-item card"><div class="svc-cover">' + art(s.cat) + '</div><div class="svc-name ellipsis">' + s.name + '</div>' +
+        '<div class="row-between" style="padding:0 10px"><span class="price"><span class="unit">¥ </span><span class="t-num">' + s.price + '</span></span><span class="tag gray">' + s.min + ' 分钟</span></div></div>'
+      ).join('')}
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>活动与奖池</span><span class="more">去抽奖 ›</span></div>
+    <div class="card">
+      <div class="pool-tip">到店消费后即可翻牌抽奖，奖品任你揭晓</div>
+      ${pool.map(p =>
+        '<div class="pool-item row"><div class="ic-badge gold sm">' + ic('gift','ic-sm') + '</div>' +
+        '<div class="flex-1 pool-name"><div class="ellipsis">' + p.name + '</div><div class="t-tip">' + p.remark + '</div></div>' +
+        '<span class="tag gold">' + p.type + '</span></div>'
+      ).join('')}
+    </div>
+  </div>
+</div>`
+
+S['services'] = () => `
+<div class="page">
+  <div class="tabs" style="padding:8px 0 12px;">
+    <div class="tab active">全部</div><div class="tab">美甲</div><div class="tab">美睫</div><div class="tab">美容</div>
+  </div>
+  ${services.concat([{name:'浓密飞翘嫁接',cat:'美睫',price:'128',min:90,desc:'浓密卷翘，深邃电眼'},{name:'肩颈放松护理',cat:'美容',price:'128',min:45,desc:'舒缓肩颈，放松身心'}]).map(s =>
+    '<div class="svc-row card"><div class="svc-img">' + art(s.cat) + '</div><div class="svc-info flex-1">' +
+    '<div class="row"><span class="t-title flex-1 ellipsis">' + s.name + '</span>' + (s.hot ? '<span class="tag gold">人气</span>' : '') + '</div>' +
+    '<div class="t-sub">' + s.desc + '</div>' +
+    '<div class="row-between"><span class="row svc-meta"><span class="tag">' + s.cat + '</span><span class="t-tip">' + s.min + ' 分钟</span></span>' +
+    '<span class="row" style="gap:10px"><span class="price"><span class="unit">¥ </span><span class="t-num">' + s.price + '</span></span><span class="btn-mini primary">预约</span></span></div>' +
+    '</div></div>'
+  ).join('')}
+</div>`
+
+S['booking'] = () => `
+<div class="page">
+  <div class="card">
+    <div class="section-title"><span>选择服务项目</span></div>
+    <div class="picked row-between"><div><div class="t-title">渐变猫眼美甲</div><div class="t-sub">美甲 · 约 75 分钟</div></div><span class="price"><span class="unit">¥ </span><span class="t-num">128</span></span></div>
+  </div>
+  <div class="card section">
+    <div class="section-title"><span>选择日期</span></div>
+    <div class="days">
+      ${[['今天','周五',1],['明天','周六'],['18日','周日'],['19日','周一'],['20日','周二'],['21日','周三'],['22日','周四']]
+        .map((d,i) => '<div class="day ' + (d[2] ? 'active' : '') + '"><span>' + d[0] + '</span><span class="week">' + d[1] + '</span></div>').join('')}
+    </div>
+  </div>
+  <div class="card section">
+    <div class="section-title"><span>选择时段</span></div>
+    <div class="slots">
+      ${['12:30','13:30','14:30','15:30','16:30','17:30','18:30','19:30','20:30','21:30']
+        .map((t,i) => '<div class="slot ' + (t === '15:30' ? 'active' : (t === '13:30' || t === '18:30' ? 'disabled' : '')) + '">' + t + '</div>').join('')}
+    </div>
+    <div class="t-tip">灰色时段已被预约</div>
+  </div>
+  <div class="card section">
+    <div class="form-item"><div class="form-label">备注</div><div class="form-value form-placeholder">如：偏好的款式、颜色、手法等（选填）</div></div>
+    <div class="pics-row">
+      <div class="pic-box"><div class="pic-ph">${ic('camera','pic-add-ic')}</div></div>
+      <div class="pic-box"><div class="pic-ph">${ic('camera','pic-add-ic')}</div></div>
+      <div class="pic-add">${ic('camera','pic-add-ic')}<span class="pic-add-txt">参考图</span></div>
+    </div>
+  </div>
+  <div class="card section row-between">
+    <span class="ic-badge">${ic('wallet','ic')}</span>
+    <span class="flex-1" style="margin:0 10px;"><span style="font-size:15px;color:var(--ink);">微信付定金</span><br><span class="t-tip">扫码或长按识别二维码，支付后请告知门店</span></span>
+    ${ic('chevron','cell-arrow')}
+  </div>
+  <div class="btn btn-primary btn-block" style="margin-top:20px;">提交预约</div>
+  <div class="t-tip" style="text-align:center;margin-top:10px;">提交后到店出示会员信息即可，到店前可随时取消</div>
+</div>`
+
+S['appointments'] = () => `
+<div class="page">
+  ${[
+    { name: '渐变猫眼美甲', time: '2026-10-16 14:00', status: '待确认', cls: 'warn', remark: '想要棕色系猫眼', pics: 2 },
+    { name: '自然舒适嫁接', time: '2026-10-22 15:00', status: '已确认', cls: 'ok' },
+    { name: '深层清洁护理', time: '2026-09-30 11:00', status: '已完成', cls: 'gray' }
+  ].map(a =>
+    '<div class="card"><div class="row-between"><span class="t-title flex-1 ellipsis">' + a.name + '</span><span class="tag ' + a.cls + '">' + a.status + '</span></div>' +
+    '<div class="row" style="gap:6px;margin:8px 0 4px;color:var(--ink-2);font-size:13px;">' + ic('calendar','ic-sm') + '<span>' + a.time + '</span></div>' +
+    (a.remark ? '<div class="t-sub">备注：' + a.remark + '</div>' : '') +
+    (a.pics ? '<div class="pics-row">' + Array.from({length: a.pics}, () => '<div class="pic-box"><div class="pic-ph">' + ic('camera','pic-add-ic') + '</div></div>').join('') + '</div>' : '') +
+    '<div class="divider"></div><div class="row-between"><span class="t-tip">下单于 ' + a.time.slice(0,10) + '</span><span class="row" style="gap:8px;"><span class="btn-mini primary">付定金</span><span class="btn-mini line">取消预约</span></span></div></div>'
+  ).join('')}
+</div>`
+
+S['card'] = () => `
+<div class="page">
+  <div class="mcard">
+    <img class="mcard-bg" src="images/services/card_bg.jpg" alt="">
+    <div class="row-between">
+      <div><div class="mcard-label">储值余额（元）</div><div class="mcard-balance"><span class="unit">¥ </span>1280.5</div></div>
+      <div class="mcard-chip">${ic('card','ic-lg')}</div>
+    </div>
+    <div class="row-between mcard-foot"><span>小薯条</span><span>办卡时间 2025-06-18</span></div>
+  </div>
+  <div class="card row" style="margin-top:12px;">
+    <div class="ic-badge">${ic('crown')}</div>
+    <div class="flex-1" style="margin-left:10px;"><div class="t-title">金卡会员</div><div class="t-sub">累计消费 ¥3,642</div></div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>我的次卡</span></div>
+    ${[
+      { name: '自然舒适嫁接', remain: 3, total: 10, status: '使用中', cls: 'ok', end: '2027-03-01' },
+      { name: '深层清洁护理', remain: 0, total: 5, status: '已用完', cls: 'gray', end: '2026-12-15' }
+    ].map(c => {
+      const pct = Math.round((c.total - c.remain) / c.total * 100)
+      return '<div class="card"><div class="row-between"><span class="t-title flex-1 ellipsis">' + c.name + '</span><span class="tag ' + c.cls + '">' + c.status + '</span></div>' +
+      '<div class="progress-wrap"><div class="progress"><div class="progress-in" style="width:' + pct + '%"></div></div>' +
+      '<span class="t-sub">剩余 <span class="t-brand t-num">' + c.remain + '</span>/' + c.total + ' 次</span></div>' +
+      '<div class="row-between t-tip"><span>有效期 2026-03-01 至 ' + c.end + '</span></div></div>'
+    }).join('<div style="height:10px"></div>')}
+  </div>
+</div>`
+
+S['records'] = () => `
+<div class="page">
+  <div class="tabs" style="padding:8px 0 12px;">
+    <div class="tab active">消费记录</div><div class="tab">扣卡记录</div><div class="tab">充值记录</div>
+  </div>
+  ${records.map(r =>
+    '<div class="rec card"><div class="ic-badge">' + ic('scissors') + '</div>' +
+    '<div class="flex-1 rec-info"><div class="t-title ellipsis">' + r.name + '</div><div class="cell-desc">' + r.sub + '</div></div>' +
+    '<div class="rec-amount t-num ' + r.cls + '">' + r.amt + '</div></div>'
+  ).join('')}
+</div>`
+
+S['lottery'] = () => `
+<div class="page" style="display:flex;flex-direction:column;align-items:center;">
+  <div class="lottery-hero">
+    <div class="lottery-title">翻牌抽奖</div>
+    <div class="lottery-sub">到店消费后即得抽奖机会，从两张卡牌中任选一张，翻开揭晓惊喜</div>
+  </div>
+  <div class="cards">
+    <div class="flip" onclick="this.classList.add('open')">
+      <div class="flip-inner">
+        <div class="face back"><div class="face-logo">可</div><div class="face-tip">点我翻开</div></div>
+        <div class="face front win">${ic('gift','ic-lg')}<div class="face-name">美甲优惠 30 元</div></div>
+      </div>
+    </div>
+    <div class="flip" onclick="this.classList.add('open')">
+      <div class="flip-inner">
+        <div class="face back"><div class="face-logo">樂</div><div class="face-tip">点我翻开</div></div>
+        <div class="face front win">${ic('gift','ic-lg')}<div class="face-name">免费手部护理 1 次</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="t-tip" style="margin-top:18px;">两张卡牌背后藏着不同惊喜</div>
+</div>`
+
+S['prizes'] = () => `
+<div class="page">
+  <div class="tabs" style="padding:8px 0 12px;">
+    <div class="tab active">未使用</div><div class="tab">已核销</div><div class="tab">全部</div><div class="tab">抽奖记录</div>
+  </div>
+  ${prizes.map(p =>
+    '<div class="prize card"><div class="ic-badge gold">' + ic('ticket') + '</div>' +
+    '<div class="flex-1 prize-info"><div class="row"><span class="t-title flex-1 ellipsis">' + p.name + '</span><span class="tag ' + p.cls + '">' + p.status + '</span></div>' +
+    '<div class="cell-desc">' + p.type + '</div><div class="row-between prize-foot t-tip"><span>' + p.foot.split(' · ')[0] + '</span><span>' + p.foot.split(' · ')[1] + '</span></div></div></div>'
+  ).join('')}
+  <div class="section">
+    <div class="section-title"><span>抽奖记录</span></div>
+    <div class="card">
+      ${[['美甲优惠 30 元','10-12 11:21'],['谢谢参与','10-02 16:40'],['免费手部护理 1 次','09-28 13:05']]
+        .map(l => '<div class="cell">' + ic('clock') + '<div class="cell-title"><div class="t-title">' + l[0] + '</div><div class="cell-desc">抽奖时间 2026-' + l[1] + '</div></div><span class="tag ' + (l[0] === '谢谢参与' ? 'gray' : 'gold') + '">' + (l[0] === '谢谢参与' ? '未中奖' : '已揭晓') + '</span></div>').join('')}
+    </div>
+  </div>
+</div>`
+
+S['profile'] = () => {
+  const previewing = ROLE !== REAL_ROLE
+  const showWorkbench = ROLE !== 'customer'
+  return `
+<div class="page">
+  <div class="card row" style="padding:16px 14px;">
+    <div class="avatar">${ic('user','ic-lg')}</div>
+    <div class="flex-1" style="margin:0 10px;">
+      <div class="row"><span class="t-title ellipsis">小薯条</span><span class="tag gold role-tag">${ROLE_LABEL[ROLE]}</span>${previewing ? '<span class="tag preview-tag">预览中</span>' : ''}</div>
+      <div class="t-sub">138****6688</div>
+    </div>
+    <div class="user-balance"><div class="user-balance-num"><span style="font-size:11px;">¥</span><span class="t-num">1280.5</span></div><div class="user-balance-label">储值余额</div></div>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    ${[['calendar','我的预约'],['card','会员卡与余额'],['clock','消费 / 扣卡记录'],['coin','充值记录'],['gift','抽奖记录与我的奖励']]
+      .map(m => '<div class="cell"><div class="ic-badge">' + ic(m[0]) + '</div><div class="cell-title">' + m[1] + '</div>' + ic('chevron','cell-arrow') + '</div>').join('')}
+  </div>
+  ${showWorkbench ? `<div class="card" style="margin-top:12px;">
+    <div class="cell"><div class="ic-badge gold">${ic('bell')}</div><div class="cell-title">店员工作台</div><span class="tag gold">店员/店长</span>${ic('chevron','cell-arrow')}</div>
+  </div>` : ''}
+  <div class="card" style="margin-top:12px;">
+    <div class="cell"><div class="ic-badge">${ic('edit')}</div><div class="cell-title">个人资料</div>${ic('chevron','cell-arrow')}</div>
+    <div class="cell" onclick="show('settings')"><div class="ic-badge">${ic('settings')}</div><div class="cell-title">设置</div>${previewing ? '<span class="tag preview-tag">预览中</span>' : ''}${ic('chevron','cell-arrow')}</div>
+  </div>
+</div>`
+}
+
+S['settings'] = () => {
+  const previewing = ROLE !== REAL_ROLE
+  const roles = ['customer', 'staff', 'manager'].map(key => ({
+    key: key,
+    name: ROLE_NAME[key],
+    desc: key === 'customer' ? '首页 · 服务 · 预约 · 抽奖'
+      : key === 'staff' ? '工作台 · 我的预约 · 工资'
+      : '经营看板 · 工资 · 记账',
+    icon: key === 'customer' ? 'home' : key === 'staff' ? 'briefcase' : 'chart',
+    cur: key === ROLE,
+    mine: key === REAL_ROLE,
+    disabled: ROLE_RANK[key] > ROLE_RANK[REAL_ROLE]
+  }))
+  return `
+<div class="page">
+  <div class="card row" style="padding:16px 14px;align-items:center;">
+    <div class="avatar" style="width:48px;height:48px;">${ic('user','ic-lg')}</div>
+    <div class="flex-1" style="margin:0 10px;min-width:0;">
+      <div class="row"><span class="t-title ellipsis">小薯条</span><span class="tag gold role-tag">${ROLE_LABEL[REAL_ROLE]}</span>${previewing ? '<span class="tag preview-tag">预览中</span>' : ''}</div>
+      <div class="t-sub ellipsis">138****6688 · 微信授权登录</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>切换画面身份</span></div>
+    <div class="card" style="padding-top:4px;">
+      <div class="t-tip" style="padding:2px 2px 10px;line-height:1.6;">以其他身份的画面查看小程序，仅本机生效，不会改动账号的真实身份与权限。</div>
+      ${roles.map(r => `
+        <div class="role-opt ${r.cur ? 'cur' : ''} ${r.disabled ? 'disabled' : ''}" onclick="pickRole('${r.key}')">
+          <div class="ic-badge ${r.mine ? 'gold' : ''}" style="width:32px;height:32px;border-radius:10px;">${ic(r.icon, 'ic-sm')}</div>
+          <div class="flex-1" style="margin-left:10px;">
+            <div class="role-name">${r.name}</div>
+            <div class="role-desc">${r.desc}</div>
+          </div>
+          ${r.disabled ? '<span class="tag gray">无权限</span>' : ''}
+          ${r.mine ? '<span class="tag gold">我的身份</span>' : ''}
+          ${r.cur ? '<span class="tag">当前画面</span>' : ''}
+          ${ic('chevron','cell-arrow')}
+        </div>`).join('')}
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span>账号</span></div>
+    <div class="card">
+      <div class="cell"><div class="ic-badge">${ic('logout')}</div><div class="cell-title set-danger">退出登录</div>${ic('chevron','cell-arrow')}</div>
+      <div class="cell" style="border-bottom:none;"><div class="ic-badge">${ic('refresh')}</div><div class="cell-title">刷新账号数据</div>${ic('chevron','cell-arrow')}</div>
+    </div>
+  </div>
+
+  <div class="set-note">账号与微信绑定：退出后重新进入小程序，会自动以当前微信身份登录。</div>
+</div>`
+}
+
+function pickRole(key) {
+  if (ROLE_RANK[key] > ROLE_RANK[REAL_ROLE]) return
+  ROLE = key
+  const conf = ROLE_DOCK[ROLE]
+  const target = conf.pages.indexOf(CURRENT) > -1 ? CURRENT : ROLE_HOME[ROLE]
+  show(target)
+}
+
+S['login'] = () => `
+<div class="page" style="text-align:center;">
+  <div style="padding:40px 0 24px;">
+    <div style="width:70px;height:70px;margin:0 auto;border-radius:20px;background:linear-gradient(135deg,#333333,#262626);color:#fff;font-size:32px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px rgba(0,0,0,.3);">可</div>
+    <div style="font-size:22px;font-weight:700;margin-top:12px;letter-spacing:3px;">可樂</div>
+    <div class="t-tip" style="margin-top:4px;">美甲 · 美睫 · 美容会员中心</div>
+  </div>
+  <div class="card" style="text-align:left;">
+    <div class="form-item"><div class="form-label">头像</div><div class="avatar" style="width:44px;height:44px;">${ic('user')}</div></div>
+    <div class="form-item"><div class="form-label">昵称</div><div class="form-value form-placeholder">填写微信昵称</div></div>
+    <div class="form-item"><div class="form-label">手机号</div><div class="form-value form-placeholder">用于门店识别会员身份</div></div>
+    <div class="form-item"><div class="form-label">生日</div><div class="form-value form-placeholder">选择生日</div></div>
+  </div>
+  <div class="btn btn-primary btn-block" style="margin-top:20px;">保存并进入</div>
+  <div class="t-tip" style="margin-top:10px;">信息仅用于会员识别与生日礼遇，不会对外公开</div>
+</div>`
+
+S['staff-home'] = () => `
+<div class="page">
+  <div class="stats card">
+    <div class="stat"><div class="stat-num t-num">6</div><div class="stat-label">今日预约</div></div>
+    <div class="stat"><div class="stat-num t-num">12</div><div class="stat-label">今日消费</div></div>
+    <div class="stat"><div class="stat-num t-num">3</div><div class="stat-label">今日充值</div></div>
+    <div class="stat"><div class="stat-num t-num">286</div><div class="stat-label">会员总数</div></div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>快捷操作</span></div>
+    <div class="quick card" style="margin-top:0;">
+      ${[['minus','扣卡登记',''],['plus','充值登记',''],['ticket','抢单大厅',''],['sparkle','帮客预约','']]
+        .map(q => '<div class="quick-item"><div class="ic-badge ' + q[2] + '">' + ic(q[0]) + '</div><span>' + q[1] + '</span></div>').join('')}
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>我的今日单</span><span class="more">全部订单 ›</span></div>
+    <div class="card">
+      ${[['14:00','渐变猫眼美甲 · 小薯条','ok','服务中'],['19:00','补水焕肤管理 · 冬冬','gray','已完成']]
+        .map(a => '<div class="cell"><span class="t-num" style="color:var(--ink-2);font-size:13px;">' + a[0] + '</span>' +
+          '<div class="cell-title"><div class="ellipsis">' + a[1] + '</div></div><span class="tag ' + a[2] + '">' + a[3] + '</span></div>').join('')}
+    </div>
+  </div>
+</div>`
+
+S['staff-members'] = () => `
+<div class="page">
+  <div class="card">
+    <div class="mp-search">${ic('search','ic-sm')}<span class="flex-1" style="color:var(--ink-3);">搜索会员昵称 / 手机号</span></div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>会员列表</span><span class="more">共 286 人</span></div>
+    ${[
+      { name: '小薯条', phone: '138****6688', date: '2025-06-18', bal: '1280.5', role: '店员' },
+      { name: '阿棠', phone: '159****2031', date: '2025-11-02', bal: '360', role: '' },
+      { name: '冬冬', phone: '137****9451', date: '2026-02-14', bal: '52', role: '' },
+      { name: 'Momo', phone: '186****3357', date: '2026-05-30', bal: '2180', role: '' }
+    ].map(m =>
+      '<div class="mem card"><div class="mem-avatar">' + ic('user') + '</div>' +
+      '<div class="flex-1 mem-info"><div class="row"><span class="t-title ellipsis">' + m.name + '</span>' + (m.role ? '<span class="tag gold role-tag">' + m.role + '</span>' : '') + '</div>' +
+      '<div class="cell-desc">' + m.phone + ' · 办卡 ' + m.date + '</div></div>' +
+      '<div class="col" style="align-items:flex-end;"><span class="t-brand t-num">¥' + m.bal + '</span><span class="t-tip">储值余额</span></div></div>'
+    ).join('')}
+  </div>
+</div>`
+
+S['staff-charge'] = () => `
+<div class="page">
+  <div class="card">
+    <div class="section-title"><span>选择顾客</span></div>
+    <div class="mp-selected row">
+      <div class="avatar" style="width:38px;height:38px;">${ic('user')}</div>
+      <div class="flex-1" style="margin:0 10px;"><div class="t-title">小薯条</div><div class="cell-desc">138****6688 · 余额 ¥1280.5</div></div>
+      <span class="btn-mini line">更换</span>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="section-title"><span>登记方式</span></div>
+    <div class="tabs"><div class="tab active">储值扣款</div><div class="tab">次卡扣次</div><div class="tab">现场收款</div></div>
+    <div class="form-item"><div class="form-label">消费项目</div><div class="form-value">渐变猫眼美甲</div></div>
+    <div class="form-item"><div class="form-label">扣款金额</div><div class="form-value">128</div><span class="t-sub">元</span></div>
+    <div class="t-tip">该会员当前储值余额 ¥1280.5</div>
+    <div class="form-item"><div class="form-label">备注</div><div class="form-value form-placeholder">款式、手法等补充说明（选填）</div></div>
+  </div>
+  <div class="btn btn-primary btn-block" style="margin-top:20px;">确认登记</div>
+  <div class="t-tip" style="text-align:center;margin-top:10px;">登记完成后，顾客将自动收到一次翻牌抽奖机会</div>
+</div>`
+
+S['staff-recharge'] = () => `
+<div class="page">
+  <div class="card">
+    <div class="section-title"><span>选择会员</span></div>
+    <div class="mp-selected row">
+      <div class="avatar" style="width:38px;height:38px;">${ic('user')}</div>
+      <div class="flex-1" style="margin:0 10px;"><div class="t-title">小薯条</div><div class="cell-desc">138****6688 · 余额 ¥1280.5</div></div>
+      <span class="btn-mini line">更换</span>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="section-title"><span>充值信息</span></div>
+    <div class="form-item"><div class="form-label">充值金额</div><div class="form-value">1000</div><span class="t-sub">元</span></div>
+    <div class="form-item"><div class="form-label">赠送金额</div><div class="form-value">100</div><span class="t-sub">元</span></div>
+    <div class="form-item"><div class="form-label">收款方式</div><div class="form-value">微信收款</div></div>
+    <div class="form-item"><div class="form-label">备注</div><div class="form-value form-placeholder">活动说明等（选填）</div></div>
+  </div>
+  <div class="card row-between" style="margin-top:12px;">
+    <span class="t-sub">本次入账（实收 + 赠送）</span>
+    <span class="price"><span class="unit">¥ </span><span class="t-num">1100</span></span>
+  </div>
+  <div class="btn btn-primary btn-block" style="margin-top:20px;">确认充值</div>
+</div>`
+
+S['staff-prizes'] = () => `
+<div class="page">
+  <div class="section-title"><span>抽奖奖池</span><span class="more">＋ 新增奖品</span></div>
+  <div class="t-tip" style="padding:0 2px 10px;">「概率」为相对权重，实际中奖概率 = 该奖品权重 ÷ 全部启用奖品权重之和</div>
+  ${[
+    { name: '美甲优惠 30 元', type: '优惠券', cls: 'gold', meta: '中奖概率约 20% · 库存 999 · 面额 ¥30', on: 1 },
+    { name: '免费手部护理 1 次', type: '免费项目', cls: 'ok', meta: '中奖概率约 10% · 库存 50', on: 1 },
+    { name: '美睫补做加赠 10 天', type: '专属福利', cls: '', meta: '中奖概率约 15% · 库存 999', on: 1 },
+    { name: '下次消费立减 20 元', type: '优惠券', cls: 'gold', meta: '中奖概率约 20% · 库存 999 · 面额 ¥20', on: 1 },
+    { name: '谢谢参与', type: '谢谢参与', cls: 'gray', meta: '中奖概率约 20% · 库存 999', on: 0 }
+  ].map(p =>
+    '<div class="prize card"><div class="ic-badge ' + (p.on ? 'gold' : '') + '">' + ic('gift') + '</div>' +
+    '<div class="flex-1 prize-info"><div class="row"><span class="t-title flex-1 ellipsis">' + p.name + '</span><span class="tag ' + p.cls + '">' + p.type + '</span></div>' +
+    '<div class="cell-desc">' + p.meta + '</div></div>' +
+    '<div class="switch ' + (p.on ? 'on' : '') + '" onclick="this.classList.toggle(\'on\')"></div></div>'
+  ).join('')}
+</div>`
+
+S['staff-orders'] = () => `
+<div class="page">
+  <div class="tabs" style="padding:8px 0 12px;">
+    <div class="tab active">抢单大厅 <span class="tag bad" style="margin-left:2px;">3</span></div><div class="tab">我的单</div>
+  </div>
+  ${[
+    { name: '渐变猫眼美甲', time: '10-25 14:00', member: 'Momo 186****3357', remark: '想要棕色系猫眼，参考图如下', pic: true, cls: 'gold', status: '待接单' },
+    { name: '自然舒适嫁接', time: '10-24 15:00', member: '冬冬 137****9451', remark: '', pic: false, cls: 'gold', status: '待接单' },
+    { name: '深层清洁护理', time: '10-23 19:30', member: '阿棠 159****2031', remark: '首次到店，皮肤偏敏感', pic: false, cls: 'bad', status: '已过期' }
+  ].map(o =>
+    '<div class="card" style="margin-bottom:10px;"><div class="row-between"><span class="t-title flex-1 ellipsis">' + o.name + '</span><span class="tag ' + o.cls + '">' + o.status + '</span></div>' +
+    '<div class="row" style="gap:8px;margin:8px 0 0;color:var(--ink-2);font-size:12px;"><span class="t-brand" style="font-weight:600;">' + o.time + '</span><span>' + o.member + '</span></div>' +
+    (o.remark ? '<div class="t-sub" style="margin-top:6px;">备注：' + o.remark + '</div>' : '') +
+    (o.pic ? '<div class="row" style="gap:6px;margin-top:8px;"><div style="width:64px;height:64px;border-radius:8px;background:linear-gradient(135deg,#D8A7A0,#171717);"></div><div style="width:64px;height:64px;border-radius:8px;background:linear-gradient(135deg,#E8C8B8,#D8A7A0);"></div></div>' : '') +
+    '<div class="row-between" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line);"><span class="t-tip">抢到即计入你的业绩与提成</span><span class="btn-mini primary">抢单</span></div></div>'
+  ).join('')}
+</div>`
+
+/* ================= 老板端 ================= */
+S['boss-home'] = () => `
+<div class="page">
+  <div class="card" style="padding:18px 16px;">
+    <div class="row-between"><span class="t-sub">2026 年 10 月 · 经营概况</span><span class="tag ok">实时</span></div>
+    <div class="row" style="margin-top:14px;">
+      <div class="flex-1"><div class="t-tip">本月收入</div><div class="t-num" style="font-size:21px;color:var(--brand-deep);">¥36,480</div></div>
+      <div class="flex-1"><div class="t-tip">本月支出</div><div class="t-num" style="font-size:21px;">¥12,860</div></div>
+      <div class="flex-1"><div class="t-tip">净利润</div><div class="t-num" style="font-size:21px;color:var(--ok);">¥23,620</div></div>
+    </div>
+    <div class="t-tip" style="margin-top:12px;">服务收入 ¥28,300 · 充值收入 ¥8,180 · 会员 286 人</div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>快捷入口</span></div>
+    <div class="quick card" style="margin-top:0;">
+      ${[['coin','工资管理','gold'],['list','记账',''],['users','会员登记',''],['calendar','预约管理','']]
+        .map(q => '<div class="quick-item" onclick="show(\'' + (q[1] === '工资管理' ? 'boss-payroll' : q[1] === '记账' ? 'boss-finance' : q[1] === '会员登记' ? 'staff-members' : 'appointments') + '\')"><div class="ic-badge ' + q[2] + '">' + ic(q[0]) + '</div><span>' + q[1] + '</span></div>').join('')}
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>员工业绩</span><span class="more" onclick="show('boss-payroll')">工资管理 ›</span></div>
+    ${[
+      { name: '小薯条', role: '店员', orders: 32, amount: '8,960', bonus: '1,344' },
+      { name: '阿棠', role: '店员', orders: 26, amount: '7,180', bonus: '1,077' }
+    ].map(e =>
+      '<div class="mem card"><div class="mem-avatar">' + ic('user') + '</div>' +
+      '<div class="flex-1 mem-info"><div class="row"><span class="t-title ellipsis">' + e.name + '</span><span class="tag gold role-tag">' + e.role + '</span></div>' +
+      '<div class="cell-desc">经手 ' + e.orders + ' 单 · 业绩 ¥' + e.amount + '</div></div>' +
+      '<div class="col" style="align-items:flex-end;"><span class="t-brand t-num">¥' + e.bonus + '</span><span class="t-tip">本月提成</span></div></div>'
+    ).join('')}
+  </div>
+</div>`
+
+S['boss-payroll'] = () => `
+<div class="page">
+  <div class="card row-between">
+    <span class="t-title">2026 年 10 月</span>
+    <span class="btn-mini line">切换月份</span>
+  </div>
+  <div class="card" style="margin-top:12px;">
+    <div class="row-between"><span class="t-sub">本月工资合计</span><span class="price"><span class="unit">¥ </span><span class="t-num">14,821</span></span></div>
+    <div class="t-tip" style="margin-top:6px;">2 位员工 · 底薪 ¥12,400 + 提成 ¥2,421</div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>工资条</span><span class="more">生成本月工资条</span></div>
+    ${[
+      { name: '小薯条', base: '6,000', bonus: '1,344', total: '7,344', status: '已确认', cls: 'ok' },
+      { name: '阿棠', base: '6,400', bonus: '1,077', total: '7,477', status: '待确认', cls: 'warn' }
+    ].map(p =>
+      '<div class="card" style="margin-bottom:10px;"><div class="row-between"><span class="t-title">' + p.name + '</span><span class="tag ' + p.cls + '">' + p.status + '</span></div>' +
+      '<div class="cell-desc" style="margin-top:8px;">底薪 ¥' + p.base + ' · 提成 ¥' + p.bonus + '</div>' +
+      '<div class="divider"></div><div class="row-between"><span class="t-tip">应发合计</span><span class="t-brand t-num">¥' + p.total + '</span></div></div>'
+    ).join('')}
+  </div>
+  <div class="btn btn-primary btn-block" style="margin-top:8px;">生成本月工资条</div>
+  <div class="t-tip" style="text-align:center;margin-top:10px;">生成后员工可在工作台查看，确认后锁定不可修改</div>
+</div>`
+
+S['boss-finance'] = () => `
+<div class="page">
+  <div class="stats card">
+    <div class="stat"><div class="stat-num t-num">36,480</div><div class="stat-label">本月收入</div></div>
+    <div class="stat"><div class="stat-num t-num">12,860</div><div class="stat-label">本月支出</div></div>
+    <div class="stat"><div class="stat-num t-num" style="color:var(--ok);">23,620</div><div class="stat-label">净利润</div></div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>收入构成</span><span class="more">自动汇总</span></div>
+    <div class="card">
+      <div class="cell"><div class="ic-badge">${ic('scissors')}</div><div class="cell-title"><div class="t-title">服务收入</div><div class="cell-desc">消费 / 扣卡登记自动计入</div></div><span class="t-brand t-num">¥28,300</span></div>
+      <div class="cell" style="border-bottom:none;"><div class="ic-badge">${ic('coin')}</div><div class="cell-title"><div class="t-title">充值收入</div><div class="cell-desc">会员充值实收自动计入</div></div><span class="t-brand t-num">¥8,180</span></div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="section-title"><span>支出记录</span><span class="more">＋ 记一笔</span></div>
+    ${[
+      { cat: '房租水电', note: '10 月房租', date: '10-01', amount: '8,600' },
+      { cat: '材料进货', note: '甲油胶补货', date: '10-08', amount: '2,180' },
+      { cat: '推广', note: '朋友圈广告', date: '10-15', amount: '1,200' },
+      { cat: '其他', note: '清洁用品', date: '10-19', amount: '880' }
+    ].map(e =>
+      '<div class="card" style="margin-bottom:10px;"><div class="row-between"><span class="t-title">' + e.cat + '</span><span class="t-num" style="color:var(--bad);">−¥' + e.amount + '</span></div>' +
+      '<div class="cell-desc" style="margin-top:6px;">' + e.note + ' · ' + e.date + '</div></div>'
+    ).join('')}
+  </div>
+</div>`
+
+/* ================= 导航与渲染 ================= */
+const NAV = {
+  '顾客端': [
+    ['home', '门店首页'], ['services', '服务项目'], ['booking', '预约时间选择'],
+    ['appointments', '我的预约'], ['card', '会员卡与余额'], ['records', '消费/扣卡/充值记录'],
+    ['lottery', '翻牌抽奖'], ['prizes', '我的奖品'], ['profile', '个人中心'],
+    ['settings', '设置'], ['login', '会员登录']
+  ],
+  '店员端': [
+    ['staff-home', '店员工作台'], ['staff-orders', '抢单大厅'], ['staff-members', '会员管理'],
+    ['staff-charge', '扣卡登记'], ['staff-recharge', '充值登记'], ['staff-prizes', '奖品设置']
+  ],
+  '老板端': [
+    ['boss-home', '经营看板'], ['boss-payroll', '工资管理'], ['boss-finance', '记账']
+  ]
+}
+const TITLES = {
+  home: '可樂 · 美甲美睫美容', services: '服务项目', booking: '预约到店', appointments: '我的预约',
+  card: '会员卡与余额', records: '消费与充值记录', lottery: '翻牌抽奖', prizes: '我的奖品',
+  profile: '个人中心', login: '会员登录', settings: '设置', 'staff-home': '店员工作台', 'staff-orders': '抢单大厅', 'staff-members': '会员管理',
+  'staff-charge': '扣卡登记', 'staff-recharge': '充值登记', 'staff-prizes': '奖品设置',
+  'boss-home': '经营看板', 'boss-payroll': '工资管理', 'boss-finance': '记账'
+}
+const PAGE_ICON = {
+  home: 'home', services: 'scissors', appointments: 'calendar', lottery: 'gift', profile: 'user',
+  'staff-home': 'briefcase', 'staff-orders': 'ticket', 'boss-home': 'chart', 'boss-payroll': 'coin', 'boss-finance': 'list'
+}
+
+function renderNav() {
+  const MAP = { '顾客端': 'nav-customer', '店员端': 'nav-staff', '老板端': 'nav-boss' }
+  Object.keys(NAV).forEach(g => {
+    const box = document.getElementById(MAP[g])
+    NAV[g].forEach(n => {
+      const b = document.createElement('button')
+      b.textContent = n[1]; b.dataset.key = n[0]
+      b.onclick = () => show(n[0])
+      box.appendChild(b)
+    })
+  })
+}
+
+function show(key) {
+  CURRENT = key
+  document.querySelectorAll('aside button').forEach(b => b.classList.toggle('active', b.dataset.key === key))
+  document.getElementById('screenTitle').textContent = TITLES[key] || ''
+  document.getElementById('screen').innerHTML = (S[key] || (() => ''))()
+  document.getElementById('screen').scrollTop = 0
+  const tb = document.getElementById('tabbar')
+  const conf = ROLE_DOCK[ROLE]
+  if (PAGE_ICON[key] && conf.pages.indexOf(key) > -1) {
+    tb.innerHTML = tabbar(PAGE_ICON[key]); tb.style.display = 'flex'
+  } else {
+    tb.style.display = 'none'
+  }
+}
+
+renderNav()
+show((location.hash || '').replace('#', '') || 'home')
+window.addEventListener('hashchange', () => {
+  const k = (location.hash || '').replace('#', '')
+  if (k) show(k)
+})
+</script>
+</body>
+</html>

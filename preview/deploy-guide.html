@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>可樂 · 部署向导</title>
+<style>
+  :root {
+    --brand: #C97F8B; --brand-deep: #9A5560; --brand-light: #F3E2E4;
+    --bg: #FAF6F3; --card: #FFFFFF; --ink: #3A2E2C; --sub: #8C7F7B;
+    --ok: #7BAE8C; --line: #EFE5E0; --gold: #B8956B;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: var(--ink); padding: 32px 16px 80px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 26px; }
+  .logo { width: 58px; height: 58px; border-radius: 18px; background: linear-gradient(135deg, var(--brand), var(--brand-deep)); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin: 0 auto 12px; box-shadow: 0 8px 20px rgba(154,85,96,.3); }
+  h1 { font-size: 24px; letter-spacing: 2px; }
+  .sub { color: var(--sub); font-size: 13px; margin-top: 6px; }
+
+  .progress-card { background: var(--card); border-radius: 16px; padding: 18px 20px; box-shadow: 0 4px 16px rgba(154,85,96,.08); margin-bottom: 20px; }
+  .progress-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
+  .progress-top b { font-size: 15px; }
+  .progress-top span { font-size: 13px; color: var(--brand-deep); font-weight: 600; }
+  .bar { height: 8px; border-radius: 4px; background: var(--brand-light); overflow: hidden; }
+  .bar i { display: block; height: 100%; width: 0; border-radius: 4px; background: linear-gradient(90deg, var(--brand), var(--brand-deep)); transition: width .35s ease; }
+  .done-all { text-align: center; color: var(--ok); font-size: 13px; margin-top: 10px; display: none; }
+
+  .step { background: var(--card); border-radius: 16px; padding: 18px 20px; margin-bottom: 14px; box-shadow: 0 4px 16px rgba(154,85,96,.08); border-left: 4px solid var(--brand); transition: opacity .2s; }
+  .step.ok { border-left-color: var(--ok); }
+  .step-head { display: flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; }
+  .chk { width: 26px; height: 26px; border-radius: 50%; border: 2px solid var(--brand); flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all .2s; }
+  .step.ok .chk { background: var(--ok); border-color: var(--ok); }
+  .chk svg { width: 14px; height: 14px; stroke: #fff; stroke-width: 3; fill: none; opacity: 0; transition: opacity .2s; }
+  .step.ok .chk svg { opacity: 1; }
+  .step-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .step.ok .step-title { color: var(--sub); text-decoration: line-through; text-decoration-color: rgba(140,127,123,.5); }
+  .step-no { font-size: 12px; color: var(--brand-deep); font-weight: 700; background: var(--brand-light); border-radius: 10px; padding: 3px 10px; }
+  .step-body { display: none; padding: 12px 0 2px 38px; font-size: 13.5px; line-height: 1.75; color: #55493F; }
+  .step.open .step-body { display: block; }
+  .step-body .note { background: #FBF3EE; border-radius: 10px; padding: 10px 12px; margin: 8px 0; font-size: 12.5px; color: #7A5C52; }
+  .step-body .note b { color: var(--brand-deep); }
+  code { font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; background: var(--brand-light); color: var(--brand-deep); border-radius: 6px; padding: 2px 7px; }
+  .snippet { position: relative; background: #2E2724; color: #F3E6DC; border-radius: 12px; padding: 12px 76px 12px 14px; margin: 10px 0; font-family: "SF Mono", Menlo, Consolas, monospace; font-size: 12.5px; line-height: 1.6; overflow-x: auto; white-space: pre; }
+  .copy { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: none; background: rgba(255,255,255,.14); color: #fff; font-size: 12px; border-radius: 8px; padding: 5px 12px; cursor: pointer; }
+  .copy:hover { background: rgba(255,255,255,.26); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+  .chip { background: var(--brand-light); color: var(--brand-deep); font-size: 12px; border-radius: 10px; padding: 4px 12px; font-family: "SF Mono", Menlo, monospace; }
+  .arrow { color: var(--brand); font-size: 13px; margin-right: 6px; }
+  footer { text-align: center; color: var(--sub); font-size: 12px; margin-top: 28px; line-height: 1.8; }
+  .reset { border: none; background: none; color: var(--brand-deep); cursor: pointer; font-size: 12px; text-decoration: underline; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">可</div>
+    <h1>可樂 · 部署向导</h1>
+    <div class="sub">微信开发者工具 + 微信云开发，约 10 分钟完成上线准备</div>
+  </header>
+
+  <div class="progress-card">
+    <div class="progress-top"><b>部署进度</b><span id="pct">0 / 9</span></div>
+    <div class="bar"><i id="barFill"></i></div>
+    <div class="done-all" id="doneAll">全部完成，可以在微信开发者工具里预览小程序了</div>
+  </div>
+
+  <div id="steps"></div>
+
+  <footer>
+    完成后：真机预览 → 提交审核 → 发布。奖品与服务内容可随时在「店员端 - 奖品设置」中调整。<br>
+    <button class="reset" onclick="localStorage.removeItem('kele_deploy');location.reload()">重置全部勾选</button>
+  </footer>
+</div>
+
+<script>
+const SET_STEPS = [
+  ['members','cards','records','appointments','prize_pool','prizes','lottery_tickets','services','settings']
+];
+
+const steps = [
+  {
+    t: '导入项目到微信开发者工具',
+    b: `<p><span class="arrow">›</span>打开「微信开发者工具」→ 导入 → 选择 <code>kele-beauty</code> 目录。</p>
+        <div class="note">AppID 一栏可先选「测试号」进入，但正式使用和云开发必须用<b>已认证的小程序 AppID</b>（个人主体即可开通云开发）。</div>`
+  },
+  {
+    t: '替换为自己的小程序 AppID',
+    b: `<p><span class="arrow">›</span>编辑 <code>project.config.json</code>，把 <code>appid</code> 换成你的小程序 AppID（微信公众平台 → 开发管理 → 开发设置 里查看）。</p>
+<div class="snippet">"appid": "替换为你的AppID"<button class="copy" data-copy='"appid": "替换为你的AppID"'>复制</button></div>`
+  },
+  {
+    t: '开通云开发并记下环境 ID',
+    b: `<p><span class="arrow">›</span>开发者工具顶部点「云开发」→ 开通（选择按量付费免费额度即可）→ 创建环境。</p>
+        <div class="note">环境名可填 <b>kele</b>，创建完成后<b>复制环境 ID</b>（形如 <code>kele-3g1a2b4c</code>），下一步要用。</div>`
+  },
+  {
+    t: '替换云环境 ID',
+    b: `<p><span class="arrow">›</span>编辑 <code>miniprogram/utils/config.js</code>：</p>
+<div class="snippet">CLOUD_ENV: '替换为你的环境ID'<button class="copy" data-copy="CLOUD_ENV: '替换为你的环境ID'">复制</button></div>`
+  },
+  {
+    t: '创建 9 个数据库集合',
+    b: `<p><span class="arrow">›</span>云开发控制台 → 数据库 → 逐个新建以下集合（权限保持默认「仅创建者可读写」即可，实际读写都走云函数）：</p>
+        <div class="chips"><span class="chip">members</span><span class="chip">cards</span><span class="chip">records</span><span class="chip">appointments</span><span class="chip">prize_pool</span><span class="chip">prizes</span><span class="chip">lottery_tickets</span><span class="chip">services</span><span class="chip">settings</span></div>`
+  },
+  {
+    t: '部署 api 云函数',
+    b: `<p><span class="arrow">›</span>在开发者工具左侧文件树中右键 <code>cloudfunctions/api</code> → 「上传并部署：云端安装依赖」。</p>
+        <div class="note">等待 1–2 分钟，控制台云函数列表出现 <b>api</b> 即成功。以后修改云函数代码后需重新上传部署。</div>`
+  },
+  {
+    t: '初始化默认数据（服务 + 奖池）',
+    b: `<p><span class="arrow">›</span>云开发控制台 → 云函数 → <code>api</code> → 「云端测试」，参数填：</p>
+<div class="snippet">{ "action": "misc.seed" }<button class="copy" data-copy='{ "action": "misc.seed" }'>复制</button></div>
+        <p>执行后写入默认 9 个服务项目和 6 个奖池奖品。幂等设计，重复执行不会产生重复数据。</p>`
+  },
+  {
+    t: '把自己设为店长',
+    b: `<p><span class="arrow">›</span>先在微信开发者工具里<b>打开一次小程序</b>完成注册（自动进入 members 集合）。</p>
+        <p><span class="arrow">›</span>数据库 → <code>members</code> → 找到自己的记录 → 把 <code>role</code> 字段改为 <code>manager</code>。</p>
+        <div class="note">改完重新打开小程序，「我的」页面会出现<b>店员工作台</b>入口；再进入「会员管理」可把其他店员设为 <code>staff</code>。</div>`
+  },
+  {
+    t: '配置服务图片（云存储）',
+    b: `<p><span class="arrow">›</span>云开发控制台 → 存储 → 上传服务照片（美甲 / 美睫 / 美容）。</p>
+        <p><span class="arrow">›</span>复制每张图返回的 <code>fileID</code>（形如 <code>cloud://kele-xxx/svc_nail.jpg</code>），填到 <code>services</code> 集合对应项目的 <code>cover</code> 字段。</p>
+        <div class="note">不填也能正常显示——小程序内置了与图标同风格的<b>插画占位图</b>（美甲 / 美睫 / 美容各一张 + 首页横幅 + 会员卡底纹），后续换真实照片即时生效。</div>`
+  }
+];
+
+const KEY = 'kele_deploy';
+const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+
+const box = document.getElementById('steps');
+box.innerHTML = steps.map((s, i) => `
+  <div class="step ${saved[i] ? 'ok' : ''}" data-i="${i}">
+    <div class="step-head">
+      <div class="chk"><svg viewBox="0 0 24 24"><polyline points="4 12.5 10 18 20 6"/></svg></div>
+      <div class="step-title">${s.t}</div>
+      <div class="step-no">第 ${i + 1} 步</div>
+    </div>
+    <div class="step-body">${s.b}</div>
+  </div>`).join('');
+
+function refresh() {
+  const done = box.querySelectorAll('.step.ok').length;
+  document.getElementById('pct').textContent = done + ' / 9';
+  document.getElementById('barFill').style.width = (done / 9 * 100) + '%';
+  document.getElementById('doneAll').style.display = done === 9 ? 'block' : 'none';
+}
+
+box.querySelectorAll('.step-head').forEach(h => h.addEventListener('click', e => {
+  if (e.target.classList.contains('copy')) return;
+  const step = h.parentElement;
+  step.classList.toggle('open');
+}));
+
+box.querySelectorAll('.step').forEach(step => {
+  step.addEventListener('click', e => {
+    if (e.target.classList.contains('copy')) return;
+    if (!e.target.closest('.step-head')) return;
+    step.classList.toggle('ok');
+    saved[step.dataset.i] = step.classList.contains('ok');
+    localStorage.setItem(KEY, JSON.stringify(saved));
+    refresh();
+  });
+});
+
+document.querySelectorAll('.copy').forEach(btn => btn.addEventListener('click', e => {
+  e.stopPropagation();
+  navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+    btn.textContent = '已复制';
+    setTimeout(() => btn.textContent = '复制', 1200);
+  });
+}));
+
+refresh();
+</script>
+</body>
+</html>
